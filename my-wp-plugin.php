@@ -57,6 +57,14 @@ function my_plugin_deactivate() {
 }
 register_deactivation_hook(__FILE__, 'my_plugin_deactivate');
 
+// --- Uninstall Hook ---
+// For complete removal when plugin is deleted
+function my_plugin_uninstall() {
+    require_once MY_PLUGIN_PATH . 'includes/class-uninstaller.php';
+    Plugin_Uninstaller::uninstall( MY_PLUGIN_SLUG );
+}
+register_uninstall_hook(__FILE__, 'my_plugin_uninstall');
+
 // --- Initialization ---
 
 function my_plugin_init() {
