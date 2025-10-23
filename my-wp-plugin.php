@@ -12,39 +12,58 @@
  * Domain Path: /languages
  */
 
-// Exit if accessed directly (security)
 if (!defined('WPINC')) {
     die;
 }
 
-// --- Dynamic Name/Slug/Version Definitions ---
+class My_Plugin_Bootstrap {
 
-// Get the main plugin header data
-$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version', 'TextDomain' => 'Text Domain', 'Name' => 'Plugin Name' ), 'plugin' );
+    public static function init() {
+        self::define_constants();
+        self::load_dependencies();
+        self::run_plugin();
+    }
 
-// Define plugin constants based on the header data
-if (!defined('MY_PLUGIN_NAME')) {
-    define('MY_PLUGIN_NAME', $plugin_data['Name']); // "My Dynamic Plugin Name"
-}
-if (!defined('MY_PLUGIN_SLUG')) {
-    // The Text Domain is the best value to use for the unique slug
-    define('MY_PLUGIN_SLUG', $plugin_data['TextDomain']); // "my-plugin-slug"
-}
-if (!defined('MY_PLUGIN_VERSION')) {
-    define('MY_PLUGIN_VERSION', $plugin_data['Version']); // "1.0.0"
+    private static function define_constants() {
+        $plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version', 'TextDomain' => 'Text Domain', 'Name' => 'Plugin Name' ), 'plugin' );
+
+        if (!defined('MY_PLUGIN_NAME')) {
+            define('MY_PLUGIN_NAME', $plugin_data['Name']);
+        }
+        if (!defined('MY_PLUGIN_SLUG')) {
+            define('MY_PLUGIN_SLUG', $plugin_data['TextDomain']);
+        }
+        if (!defined('MY_PLUGIN_VERSION')) {
+            define('MY_PLUGIN_VERSION', $plugin_data['Version']);
+        }
+        if (!defined('MY_PLUGIN_PATH')) {
+            define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
+        }
+        if (!defined('MY_PLUGIN_URL')) {
+            define('MY_PLUGIN_URL', plugin_dir_url(__FILE__));
+        }
+    }
+
+    private static function load_dependencies() {
+        load_plugin_textdomain(
+            MY_PLUGIN_SLUG,
+            false,
+            dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+        );
+
+        require_once MY_PLUGIN_PATH . 'includes/class-loader.php';
+        require_once MY_PLUGIN_PATH . 'includes/class-main.php';
+        require_once MY_PLUGIN_PATH . 'admin/class-admin.php';
+        require_once MY_PLUGIN_PATH . 'public/class-public.php';
+    }
+
+    private static function run_plugin() {
+        $plugin = new Plugin_Main( MY_PLUGIN_NAME, MY_PLUGIN_SLUG, MY_PLUGIN_VERSION );
+        $plugin->run();
+    }
 }
 
-// Define plugin paths
-if (!defined('MY_PLUGIN_PATH')) {
-    define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
-}
-if (!defined('MY_PLUGIN_URL')) {
-    define('MY_PLUGIN_URL', plugin_dir_url(__FILE__));
-}
-
-// --- Activation/Deactivation ---
-
-// Use the dynamic slug in activation/deactivation hooks where options are set
+// Activation/Deactivation
 function my_plugin_activate() {
     require_once MY_PLUGIN_PATH . 'includes/class-activator.php';
     Plugin_Activator::activate( MY_PLUGIN_SLUG );
@@ -57,32 +76,12 @@ function my_plugin_deactivate() {
 }
 register_deactivation_hook(__FILE__, 'my_plugin_deactivate');
 
-// --- Uninstall Hook ---
-// For complete removal when plugin is deleted
+// Uninstall Hook
 function my_plugin_uninstall() {
     require_once MY_PLUGIN_PATH . 'includes/class-uninstaller.php';
     Plugin_Uninstaller::uninstall( MY_PLUGIN_SLUG );
 }
 register_uninstall_hook(__FILE__, 'my_plugin_uninstall');
 
-// --- Initialization ---
-
-function my_plugin_init() {
-    // Load the plugin text domain for internationalization
-    load_plugin_textdomain(
-        MY_PLUGIN_SLUG, // The dynamic slug (Text Domain)
-        false,
-        dirname( plugin_basename( __FILE__ ) ) . '/languages/' // Path to the languages folder
-    );
-
-    // Load core classes
-    require_once MY_PLUGIN_PATH . 'includes/class-loader.php';
-    require_once MY_PLUGIN_PATH . 'includes/class-main.php';
-    require_once MY_PLUGIN_PATH . 'admin/class-admin.php';
-    require_once MY_PLUGIN_PATH . 'public/class-public.php';
-
-    // Pass the dynamic constants to the main orchestrator class
-    $plugin = new Plugin_Main( MY_PLUGIN_NAME, MY_PLUGIN_SLUG, MY_PLUGIN_VERSION );
-    $plugin->run();
-}
-add_action('plugins_loaded', 'my_plugin_init');
+// Initialize plugin
+add_action('plugins_loaded', array('My_Plugin_Bootstrap', 'init'));
