@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 class Plugin_Main {
     protected $loader;
     protected $plugin_name; // "My Dynamic Plugin Name"
