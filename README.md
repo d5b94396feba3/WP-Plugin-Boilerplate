@@ -23,25 +23,36 @@ One-File Setup (True Dynamic Naming): Change only the main plugin file's header 
 ```
 my-wp-plugin/
 ├── 📄 my-wp-plugin.php                 # Main plugin file (ONLY FILE TO EDIT HEADER)
+├── 📄 index.php
 ├── 📁 includes/                        # Core PHP classes
+│   ├── 📄 index.php
 │   ├── 📄 class-main.php               # Plugin orchestrator
 │   ├── 📄 class-loader.php             # Hook manager
 │   ├── 📄 class-activator.php          # Activation handler
 │   └── 📄 class-deactivator.php        # Deactivation handler
 ├── 📁 admin/                           # Backend functionality ONLY
+│   ├── 📄 index.php
 │   ├── 📄 class-admin.php              # Admin controller
 │   └── 📁 partials/                    # Admin HTML templates
+│       ├── 📄 index.php
+│       └── 📄 admin-settings.php
 ├── 📁 public/                          # Frontend functionality ONLY
+│   ├── 📄 index.php
 │   └── 📄 class-public.php             # Frontend controller
 ├── 📁 assets/                          # ALL static files
+│   ├── 📄 index.php
 │   ├── 📁 css/
+│   │   ├── 📄 index.php
 │   │   ├── 📄 admin.css
 │   │   └── 📄 public.css
 │   ├── 📁 js/
+│   │   ├── 📄 index.php
 │   │   ├── 📄 admin.js
 │   │   └── 📄 public.js
 │   └── 📁 images/
+│       └── 📄 index.php
 ├── 📁 languages/                       # Translation files (.po/.mo)
+│   └── 📄 index.php
 └── 📄 uninstall.php                    # Cleanup when deleted
 ```
 
