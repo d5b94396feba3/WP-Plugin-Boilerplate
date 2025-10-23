@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 class Plugin_Public {
 
     private $plugin_slug; // Using slug for handles
