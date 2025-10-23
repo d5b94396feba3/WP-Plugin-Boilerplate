@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 class Plugin_Activator {
     // Now accepts the slug to use dynamic option names
