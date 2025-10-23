@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 class Plugin_Loader {
     protected $actions = [];
     protected $filters = [];
