@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 class Plugin_Deactivator {
     // Now accepts the slug to use dynamic option/transient names
     public static function deactivate( $plugin_slug ) {
