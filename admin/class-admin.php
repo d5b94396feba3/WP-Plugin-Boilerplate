@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 class Plugin_Admin {
     private $plugin_name;
     private $plugin_slug;
